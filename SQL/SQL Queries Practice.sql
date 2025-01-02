@@ -141,6 +141,69 @@ from production.products
 order by
 len(product_name);
 
+-- Assignment 14
+SET IDENTITY_INSERT sales.customers ON;
 
+INSERT INTO sales.customers (customer_id, first_name, last_name, phone, email, street, city, state, zip_code)
+VALUES (1446, 'Kabir', 'khan', '03129421202', 'abc@gmail.com', 'maymar', 'karachi', 'SD', '23200');
 
+SET IDENTITY_INSERT sales.customers OFF;
 
+select *
+from sales.customers;
+
+select *
+from production.products;
+
+update production.products
+set list_price = list_price * 1.10;
+
+select *
+from production.stocks;
+
+delete from production.stocks
+where quantity = 0;
+
+-- Assignment 15
+select * from production.products;
+
+select *
+from production.products
+order by list_price desc
+offset 5 rows
+fetch next 5 rows only;
+
+-- Assignment 17
+select *
+from production.products
+where list_price > (select avg(list_price) from production.products);
+
+select * from production.products;
+select * from production.stocks;
+
+-- Assignment 18
+select
+	product_name,
+	list_price,
+	quantity
+from
+	production.products
+left join
+	production.stocks
+on 
+	production.products.product_id = production.stocks.product_id
+where
+	quantity < 5;
+
+-- Assignment 19
+select 
+first_name, last_name, state, order_id, order_status, required_date
+
+from
+sales.customers
+join
+sales.orders
+on
+sales.customers.customer_id = sales.orders.customer_id;
+
+-- Assignment 20
