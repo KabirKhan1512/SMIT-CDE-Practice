@@ -206,4 +206,16 @@ sales.orders
 on
 sales.customers.customer_id = sales.orders.customer_id;
 
+
+select * from sales.orders;
 -- Assignment 20
+select customer_id, order_status
+from sales.orders
+order by order_status desc;
+
+select customer_id, count(customer_id) as orders
+from sales.orders
+group by customer_id
+order by orders desc;
+
+-- Assignment 21
