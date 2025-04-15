@@ -137,29 +137,56 @@ select order_id, sum((list_price - (list_price*discount)) * quantity) as total_p
 from sales.order_items
 group by order_id;
 
--- 10. Write a query to select employees where DepartmentID is 3 and the Salary is between 40,000 and 80,000.
+-- 10. Write a query to select products where sales is between 4000 and 8000.
+with cte as (select p.product_name, SUM(quantity * (o.list_price - (o.list_price * o.discount))) as total_sales
+from production.products p
+join sales.order_items o
+on p.product_id = o.product_id
+group by p.product_name)
 
-
--- 11. Write a query to select employee names and salaries, ordered by Salary descending then LastName ascending.
-
+select product_name, total_sales
+from cte
+where total_sales between 4000 and 8000
+order by total_sales desc;
 
 -- 12. Write a query to assign a rank to employees based on their salary.
-
-
--- 13. Write a query to assign a dense rank to employees within each department based on salary.
-
+select product_name, list_price,
+	DENSE_RANK() over(
+	order by list_price
+	) as price_rank,
+	rank() over (
+	order by list_price
+	) as price_ranks
+from production.products;
 
 -- 14. Write a query to display each order’s OrderDate along with the next order’s OrderDate.
-
+select order_id, order_date,
+	Lead(order_date,1) over(
+	order by order_date) as next_order
+from sales.orders;
 
 -- 15. Write a query to display each order’s OrderDate along with the previous order’s OrderDate.
-
+select order_id, order_date,
+	Lag(order_date,1) over(
+	order by order_date) as previous_order
+from sales.orders;
 
 -- 16. Write a query to display customers who placed orders with a TotalAmount greater than the average order amount.
+with cte as (select c.first_name, c.last_name, sum(s.list_price - (s.list_price*s.discount)) as total_purchase
+from sales.customers c
+left join sales.orders o
+on c.customer_id = o.customer_id
+join sales.order_items s
+on o.order_id = s.order_id
+group by c.first_name, c.last_name)
+
+select first_name, last_name, total_purchase
+from cte
+where total_purchase > (select avg(total_purchase) from cte)
+order by total_purchase desc;
 
 
 -- 17. Write a query to select OrderID, TotalAmount, and the discount using dbo.CalculateDiscount(@TotalAmount).
-
 
 -- 18. Describe how to call the stored procedure usp_GetEmployeeDetails with EmployeeID as a parameter.
 
