@@ -188,30 +188,72 @@ order by total_purchase desc;
 
 -- 17. Write a query to select OrderID, TotalAmount, and the discount using dbo.CalculateDiscount(@TotalAmount).
 
--- 18. Describe how to call the stored procedure usp_GetEmployeeDetails with EmployeeID as a parameter.
 
+-- 18. Describe how to call the stored procedure usp_GetEmployeeDetails with EmployeeID as a parameter.
+Create procedure GetEmployeeDetails
+	@emp_id int
+as
+begin
+	select *
+	from sales.staffs
+	where staff_id = @emp_id
+end;
+
+exec GetEmployeeDetails @emp_id = 10;
 
 -- 19. Explain how an index on OrderDate in the Orders table can improve performance.
-
+select * from sales.orders where order_date = '2016-01-06';
+create nonclustered index orders_date_index
+on sales.orders(order_date);
 
 -- 20. Write a query that shows each order with the customer's name, order date, and employee who handled it.
-
-
+select c.first_name + ' ' + c.last_name as customer, o.order_date, s.first_name + ' ' + s.last_name as employee
+from sales.orders o
+left join sales.customers c
+on o.customer_id = c.customer_id
+join sales.staffs s
+on o.staff_id = s.staff_id;
 
 
 
 -- Hard (20 Questions)
-
-
 -- 1. Write a query to rank employees within each department by salary.
-
+Select product_name, list_price,
+rank() over(order by list_price) as price_rank,
+dense_rank() over(order by list_price) as price_ranks
+from production.products;
 
 -- 2. Write a query to calculate a running total of TotalAmount for each customer’s orders.
-
+WITH order_totals AS (
+    SELECT 
+        o.customer_id,
+        o.order_id,
+        SUM(i.quantity * (i.list_price - (i.list_price * i.discount))) AS total_amount
+    FROM sales.orders o
+    JOIN sales.order_items i ON o.order_id = i.order_id
+    GROUP BY o.customer_id, o.order_id
+)
+SELECT 
+    customer_id,
+    order_id,
+    total_amount,
+    SUM(total_amount) OVER (ORDER BY order_id) AS running_total
+FROM order_totals;
 
 -- 3. Write a query that selects customers from vw_OrderSummary whose order total is above the average and filters using the Customers table.
+create view sales.customer_orders
+as
+select c.customer_id, c.first_name + ' ' + c.last_name as customer_name, sum(i.list_price-(i.list_price*i.discount) * i.quantity) as total_price
+from sales.customers c
+left join sales.orders o
+on c.customer_id = o.customer_id
+join sales.order_items i
+on o.order_id = i.order_id
+group by c.customer_id, c.first_name + ' ' + c.last_name;
 
-
+select *
+from sales.customer_orders
+where total_price > (select avg(total_price) from sales.customer_orders);
 -- 4. Explain how to design a stored procedure that returns the top 5 bestselling products.
 
 
