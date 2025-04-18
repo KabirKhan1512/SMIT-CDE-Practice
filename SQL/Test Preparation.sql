@@ -255,10 +255,71 @@ select *
 from sales.customer_orders
 where total_price > (select avg(total_price) from sales.customer_orders);
 -- 4. Explain how to design a stored procedure that returns the top 5 bestselling products.
+create procedure bestselling
+as
+begin
+	select top 5 p.product_id, p.product_name, sum(o.list_price - (o.list_price*o.discount)) as total_sales 
+	from production.products p
+	left join sales.order_items o
+	on p.product_id = o.product_id
+	group by p.product_id, p.product_name
+	order by total_sales desc
+end;
+	exec bestselling;
 
+-- Create a scalar UDF that takes a product's price and tax rate and returns the final price after adding tax.
+create function sales.price_calculator 
+	(	@price decimal(15,2),
+		@discount decimal (15,2)
+	)
+		returns decimal(15,2)
+as
+begin
+	declare @final_price decimal(15,2)
+	set @final_price = @price - (@price * @discount)
+	return @final_price
+End;
+go
 
--- 5. Write a query to list every order with its computed discount using dbo.ComputeCustomDiscount(@OrderID), and filter out discounts below a threshold.
+select sales.price_calculator(499,0.2);
 
+DROP FUNCTION IF EXISTS sales.price_calculator;
+GO
+
+-- Write a UDF that returns the full name of a customer by combining their first and last names.
+create function sales.full_name(
+	@first_name varchar(25),
+	@last_name varchar(25)
+	) returns varchar(55)
+as
+begin
+	declare @full_name varchar(55);
+	set @full_name = @first_name + ' ' + @last_name
+	return @full_name
+End;
+
+select sales.full_name('Ali', 'Khan') as full_name;
+
+-- Create a UDF to calculate the discount amount based on a fixed discount percentage.
+create function sales.discount_finder (
+	@price decimal(15,2),
+	@discount_rate decimal(3,2)
+) returns decimal(15,2)
+as
+begin
+	declare @discount_amount decimal(15,2);
+	set @discount_amount = @price * @discount_rate
+	return @discount_amount
+end;
+
+select sales.discount_finder(599,1) as discount_amount;
+
+drop function if exists sales.discount_finder;
+-- Write a UDF to check if a product's stock level is below a given threshold.
+
+-- Create a UDF that returns the year of a bike based on its model (e.g., extract the year from a "model_year" column).
+
+-- Write a UDF that calculates the total price (without tax) for a given quantity of an item.
 
 -- 6. Write a query to calculate the median salary for each department.
 
