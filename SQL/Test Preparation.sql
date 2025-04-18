@@ -314,69 +314,94 @@ end;
 
 select sales.discount_finder(599,1) as discount_amount;
 
-drop function if exists sales.discount_finder;
 -- Write a UDF to check if a product's stock level is below a given threshold.
+create function production.stock_check (
+	@product_id int
+) returns varchar(10)
+as
+begin
+	declare @quantity varchar(10)
+	if (select sum(quantity) from production.stocks where product_id = @product_id) < 10 set @quantity = 'Low';
+	else set @quantity = 'Not Low';
+	return @quantity
+end;
 
--- Create a UDF that returns the year of a bike based on its model (e.g., extract the year from a "model_year" column).
-
--- Write a UDF that calculates the total price (without tax) for a given quantity of an item.
-
--- 6. Write a query to calculate the median salary for each department.
-
-
--- 7. Explain how indexes work and how indexing CustomerID improves join performance.
-
+select production.stock_check(289) as status;
 
 -- 8. Write a query to compute the rank of each product by total sales using Products, OrderDetails, and Orders.
+select p.product_name, sum(o.quantity * (o.list_price - (o.list_price*o.discount))) as total_sales, DENSE_RANK() over(order by sum(o.quantity * (o.list_price - (o.list_price*o.discount))) desc) as ranking
+from production.products p
+left join sales.order_items o
+on p.product_id = o.product_id
+group by p.product_name
+having sum(o.quantity * (o.list_price - (o.list_price*o.discount))) is not null;
 
 
 -- 9. Describe a scenario where an AFTER INSERT trigger updates a sales summary table.
+CREATE TABLE sales.test_order (
+    order_id INT IDENTITY(1,1) PRIMARY KEY,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    order_date DATETIME DEFAULT GETDATE()
+);
 
+create table sales.trigger_order (
+	order_id INT,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+	audit_action varchar(100),
+	audit_time datetime
+);
 
--- 10. Write a query using LAG() to show salary differences and rank employees with the largest jumps.
+create trigger sales_order_trigger
+on sales.test_order
+for insert
+as
+begin
+	insert into sales.trigger_order (order_id, product_id, quantity, audit_action, audit_time)
+	select
+		i.order_id,
+		i.product_id,
+		i.quantity,
+		'Order details inserted',
+		GETDATE()
+	from inserted i
+	print 'Trigger executed after insert'
+End;
 
-
-
--- 11. Design a view showing each department with total employees and salary payout. Join it with Departments and filter by payout-to-employee ratio.
-
-
--- 12. Write a query using LEAD() and LAG() to compare consecutive TotalAmount values and filter based on dbo.GetThreshold().
-
-
--- 13. Explain how a stored procedure can be used within a trigger to update loyalty points.
-
+INSERT INTO sales.test_order (product_id, quantity, order_date)
+VALUES 
+(34, 150, GETDATE()),
+(76, 315, GETDATE());
 
 -- 14. Write a query that uses a nested subquery to calculate average sales per month and ranks months by sales.
+select month(r.order_date) as months, year(r.order_date) as years, avg(o.quantity*(o.list_price-(o.list_price*o.discount))) as avg_sales,
+DENSE_RANK() over(order by avg(o.quantity*(o.list_price-(o.list_price*o.discount))) desc) as ranks
+from production.products p
+left join sales.order_items o
+on p.product_id = o.product_id
+join sales.orders r
+on o.order_id = r.order_id
+group by MONTH(order_date), year(r.order_date)
+order by years;
 
 
 -- 15. Write a query to create a customer leaderboard using rank and total purchases.
-
+select *, 
+DENSE_RANK() over(order by total_price desc) as customers_ranking
+from sales.customer_orders;
 
 
 -- 16. Write a query to calculate year-over-year growth in sales per customer.
+with cte as (select c.customer_id, c.first_name + ' ' + c.last_name as customer_name, year(o.order_date) as years, sum(i.list_price-(i.list_price*i.discount) * i.quantity) as total_purchase
+from sales.customers c
+left join sales.orders o
+on c.customer_id = o.customer_id
+join sales.order_items i
+on i.order_id = o.order_id
+group by c.customer_id, c.first_name + ' ' + c.last_name, year(o.order_date))
 
 
--- 17. Write a query that joins Employees with vw_DepartmentPerformance and ranks departments.
-
-
--- 18. Describe a trigger that prevents updates when order status is 'Shipped'.
-
-
--- 19. Write a query using both RANK() and DENSE_RANK() to compare handling of tied values.
-
-
--- 20. Design a solution integrating:
-
---    o A view for sales summary
-
---    o A stored procedure to get top-performing regions
-
---    o A UDF for custom commission
-
---    o Indexes for performance
-
---    o A trigger to log orders
-
---    o Window functions for ranking
-
---    Explain each component’s role, interaction, benefits, and challenges.
+select *, LAG(total_purchase,1) over(order by years partition by customer_name) 
+from cte
+;
