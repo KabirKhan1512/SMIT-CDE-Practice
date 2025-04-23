@@ -116,18 +116,40 @@ End;
 select sales.ufn_StaffSalesTotal(3,2018) as total_sales;
 
 -- Q6: For each order, calculate its total amount and then categorize it as ‘Low’, ‘Medium’ or ‘High’ value using thresholds of your choice.
+select order_id,  sum(i.quantity * (i.list_price -(i.list_price*i.discount))) as total_amount,
 
--- Q7: Identify a query that filters orders by order date and customer city. Then describe what non-clustered index you’d create to optimize it.
+	case
+		when sum(i.quantity * (i.list_price -(i.list_price*i.discount))) >= 9000 then 'High'
+		when sum(i.quantity * (i.list_price -(i.list_price*i.discount))) > 5000 then 'Medium'
+		when sum(i.quantity * (i.list_price -(i.list_price*i.discount))) < 5000 then 'Low'
+	end as status
+
+from sales.order_items i
+group by order_id;
 
 -- Q8: Retrieve all products whose list price exceeds the average list price of their category.
+SELECT 
+    p.product_id,
+    p.product_name,
+    p.list_price,
+    c.category_name
+FROM production.products p
+JOIN production.categories c ON p.category_id = c.category_id
+WHERE p.list_price > (
+    SELECT AVG(p2.list_price)
+    FROM production.products p2
+    WHERE p2.category_id = p.category_id
+);
 
--- Q9: Write a T-SQL script that takes a @StoreID parameter: if that store has processed zero orders in the last 30 days, print “No recent sales”; otherwise print “Active store”.
 
 -- Q10: Produce a single list of all distinct “locations” where the business operates, combining store cities and customer cities, with a column labeling each row as ‘Store’ or ‘Customer’.
+select distinct city as location, 'customer' as type
+from sales.customers
 
--- Q11: List every order, showing its ID, date, customer name, store city and country, plus for each order line the product name and quantity—include orders even if they have no items yet.
+union
 
--- Q12: Write a trigger on stocks that prevents any update setting quantity to a negative number—if attempted, roll back the operation.
+select distinct city as location, 'store' as type
+from sales.stores;
 
 -- Q13: Design a stored procedure usp_GetCustomerOrders that takes @CustomerID and returns all their orders with totals and status.
 
