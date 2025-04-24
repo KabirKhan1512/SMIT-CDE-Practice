@@ -152,6 +152,20 @@ select distinct city as location, 'store' as type
 from sales.stores;
 
 -- Q13: Design a stored procedure usp_GetCustomerOrders that takes @CustomerID and returns all their orders with totals and status.
+create procedure sales.usp_GetCustomerOrders (@CustomerID Int)
+as begin
+	select c.first_name, sum(i.quantity * (i.list_price -(i.list_price*i.discount))) as total, o.order_status
+	from sales.customers c
+	join sales.orders o
+	on c.customer_id = o.customer_id
+	join sales.order_items i
+	on o.order_id = i.order_id
+	where c.customer_id = @CustomerID
+	group by c.first_name, order_status
+	order by c.first_name
+end;
+
+exec sales.usp_GetCustomerOrders 11;
 
 -- Q14: Create an AFTER INSERT trigger on order_items that updates a running total in a separate product_sales_summary table.
 
