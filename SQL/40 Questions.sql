@@ -1,6 +1,6 @@
-use BikeStores
+Ôªøuse BikeStores
 
--- Q1: Create a view that returns each productís total sold quantity and average discount received.
+-- Q1: Create a view that returns each product‚Äôs total sold quantity and average discount received.
 create view production.product_quantity_solds
 as
 	select p.product_name, sum(o.quantity) as total_quantity_sold, avg(o.discount) as avg_discount 
@@ -17,7 +17,7 @@ select * from sales.customer_orders
 where total_price > (select avg(total_price) from sales.customer_orders)
 order by total_price desc;
 
--- Q3: Build an IFÖELSE block that accepts @BrandID and prints the number of products under that brand, or ìBrand not foundî if none exist.
+-- Q3: Build an IF‚Ä¶ELSE block that accepts @BrandID and prints the number of products under that brand, or ‚ÄúBrand not found‚Äù if none exist.
 create procedure production.brand_check @brandID int
 as
 begin
@@ -115,7 +115,7 @@ select sales.ufn_CategoryRevenue (2,2018) as total_rev
 End;
 select sales.ufn_StaffSalesTotal(3,2018) as total_sales;
 
--- Q6: For each order, calculate its total amount and then categorize it as ëLowí, ëMediumí or ëHighí value using thresholds of your choice.
+-- Q6: For each order, calculate its total amount and then categorize it as ‚ÄòLow‚Äô, ‚ÄòMedium‚Äô or ‚ÄòHigh‚Äô value using thresholds of your choice.
 select order_id,  sum(i.quantity * (i.list_price -(i.list_price*i.discount))) as total_amount,
 
 	case
@@ -142,7 +142,7 @@ WHERE p.list_price > (
 );
 
 
--- Q10: Produce a single list of all distinct ìlocationsî where the business operates, combining store cities and customer cities, with a column labeling each row as ëStoreí or ëCustomerí.
+-- Q10: Produce a single list of all distinct ‚Äúlocations‚Äù where the business operates, combining store cities and customer cities, with a column labeling each row as ‚ÄòStore‚Äô or ‚ÄòCustomer‚Äô.
 select distinct city as location, 'customer' as type
 from sales.customers
 
@@ -168,6 +168,94 @@ end;
 exec sales.usp_GetCustomerOrders 11;
 
 -- Q14: Create an AFTER INSERT trigger on order_items that updates a running total in a separate product_sales_summary table.
+create table trigger_order2 (
+	order_id int,
+	product_id int,
+	quantity int,
+	action varchar(50),
+	trigger_date datetime
+);
+
+
+create trigger order_insert
+on sales.test_order
+for insert as
+begin
+	insert into trigger_order2 (order_id,product_id,quantity,action,trigger_date)
+	select
+		i.order_id,
+		i.product_id,
+		i.quantity,
+		action = 'Trigger after insert',
+		GETDATE()
+	from inserted i
+	print 'Trigger Succeeded'
+End;
+
+insert into sales.test_order values (15,15,45);
+
+
+select * from trigger_order2
+
+
+use PracticeDB
+
+-- ‚úÖ Task: Write an AFTER INSERT trigger on the customers table to insert data into the customer_audit table every time a new customer is added.
+CREATE TABLE customers (
+    customer_id INT,
+    name VARCHAR(100),
+    email VARCHAR(100)
+);
+
+CREATE TABLE customer_audit (
+    customer_id INT,
+    name VARCHAR(100),
+    email VARCHAR(100),
+    inserted_on DATETIME
+);
+
+create trigger customer_trigger
+on customers
+for insert
+as
+begin
+	insert into customer_audit (customer_id, name, email, inserted_on)
+	select
+		i.customer_id,
+		i.name,
+		i.email,
+		getdate()
+	from inserted i
+	print('Triggered')
+end;
+
+INSERT INTO customers (customer_id, name, email) VALUES (1, 'Alice Johnson', 'alice.johnson@example.com');
+INSERT INTO customers (customer_id, name, email) VALUES (2, 'Brian Smith', 'brian.smith@example.com');
+INSERT INTO customers (customer_id, name, email) VALUES (3, 'Carla Mendes', 'carla.mendes@example.com');
+INSERT INTO customers (customer_id, name, email) VALUES (4, 'David Lee', 'david.lee@example.com');
+INSERT INTO customers (customer_id, name, email) VALUES (5, 'Ella Thompson', 'ella.thompson@example.com');
+INSERT INTO customers (customer_id, name, email) VALUES (6, 'Farhan Ahmed', 'farhan.ahmed@example.com');
+INSERT INTO customers (customer_id, name, email) VALUES (7, 'Grace Liu', 'grace.liu@example.com');
+INSERT INTO customers (customer_id, name, email) VALUES (8, 'Hassan Ali', 'hassan.ali@example.com');
+INSERT INTO customers (customer_id, name, email) VALUES (9, 'Isabella Rossi', 'isabella.rossi@example.com');
+INSERT INTO customers (customer_id, name, email) VALUES (10, 'Jake Turner', 'jake.turner@example.com');
+
+
+INSERT INTO customers (customer_id, name, email) VALUES 
+(11, 'Kiran Patel', 'kiran.patel@example.com'),
+(12, 'Liam O''Connor', 'liam.oconnor@example.com'),
+(13, 'Maria Gonzalez', 'maria.gonzalez@example.com'),
+(14, 'Nadia Rahman', 'nadia.rahman@example.com'),
+(15, 'Oscar Brown', 'oscar.brown@example.com'),
+(16, 'Priya Singh', 'priya.singh@example.com'),
+(17, 'Quentin Blake', 'quentin.blake@example.com'),
+(18, 'Rina Tanaka', 'rina.tanaka@example.com'),
+(19, 'Samuel White', 'samuel.white@example.com'),
+(20, 'Tara Wilson', 'tara.wilson@example.com');
+
+
+select * from customer_audit;
+
 
 -- Q15: Create a table-valued UDF ufn_ProductsByCategory(@CategoryID) listing all products in a category along with their current total stock across all stores.
 
@@ -175,8 +263,8 @@ exec sales.usp_GetCustomerOrders 11;
 
 -- Q17: Build a proc usp_AdjustStock that accepts @StoreID, @ProductID, and @AdjustmentQty; it should apply the change and log it into an inventory_log table.
 
--- Q18: For each store, show its name and the number of orders it processed that exceeded that storeís own average order total.
+-- Q18: For each store, show its name and the number of orders it processed that exceeded that store‚Äôs own average order total.
 
--- Q19: List every product and assign a stock-status labelóëOut of Stockí, ëLow Stockí (<10 units), or ëIn Stockíóbased on its total quantity across all stores.
+-- Q19: List every product and assign a stock-status label‚Äî‚ÄòOut of Stock‚Äô, ‚ÄòLow Stock‚Äô (<10 units), or ‚ÄòIn Stock‚Äô‚Äîbased on its total quantity across all stores.
 
--- Q20: Create a view showing each customerís total lifetime spend and most recent order date.
+-- Q20: Create a view showing each customer‚Äôs total lifetime spend and most recent order date.
