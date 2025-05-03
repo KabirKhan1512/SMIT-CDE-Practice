@@ -79,8 +79,7 @@ select product_name, list_price, (select avg(list_price) from production.product
 from production.products
 where list_price > (select avg(list_price) from production.products)
 ;
-select * from sales.order_items;
-select * from sales.orders;
+
 -- 5. Write a query to display each store’s name and its total sales.
 select i.order_id, o.store_id, i.list_price, i.discount, s.store_name, list_price - (list_price*discount) as total_price
 from sales.order_items i
@@ -164,6 +163,7 @@ select order_id, order_date,
 	Lead(order_date,1) over(
 	order by order_date) as next_order
 from sales.orders;
+
 
 -- 15. Write a query to display each order’s OrderDate along with the previous order’s OrderDate.
 select order_id, order_date,
