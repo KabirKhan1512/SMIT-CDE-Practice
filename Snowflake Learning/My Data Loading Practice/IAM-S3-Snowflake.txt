@@ -1,0 +1,54 @@
+-- Data Loading Using IAM Access Keys
+CREATE OR REPLACE TABLE data_loading.public.sales_data (
+    Retailer STRING,
+    Retailer_ID STRING,
+    Invoice_Date STRING,
+    Region STRING,
+    State STRING,
+    City STRING,
+    Product STRING,
+    Price_per_Unit STRING,
+    Units_Sold STRING,
+    Total_Sales STRING,
+    Operating_Profit STRING,
+    Operating_Margin STRING,
+    Sales_Method STRING
+);
+
+
+
+-- Create File Format to read csv file
+create or replace file format csv_format 
+    type = 'CSV'
+    field_delimiter = ','
+    skip_header = 1
+    FIELD_OPTIONALLY_ENCLOSED_BY = '"';
+
+-- Creating S3 Stage to download files
+create or replace stage s3_loading_data
+    url = 's3://course-practice-kabir'
+    CREDENTIALS = (AWS_KEY_ID='AKIAXZ5NGJVDTSTB4KHA', AWS_SECRET_KEY='Hk3161HeyHo/XmvMAbgXxETWNbBsmuXfAUxu+jEc');
+
+-- Confirming that the stage is made correctly
+list @s3_loading_data;
+
+
+-- copying data from S3 to table in Snowflake
+copy into sales_data
+from @s3_loading_data/sale_data.csv
+file_format = csv_format
+on_error = 'skip_file';
+
+-- Confirming the data is copied successfully
+select * from sales_data;
+
+Truncate Table sales_data;
+
+-- Selecting Columns from file in stage
+SELECT $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13
+FROM @s3_loading_data/sale_data.csv
+(FILE_FORMAT => 'csv_format');
+
+
+
+
