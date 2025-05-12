@@ -1,3 +1,5 @@
+-- This code is written by me
+
 -- Data Loading Using IAM Role (instead of access keys)
 CREATE OR REPLACE TABLE data_loading.public.sales_data (
     Retailer STRING,
