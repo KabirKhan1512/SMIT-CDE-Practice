@@ -27,7 +27,7 @@ create or replace file format csv_format
 -- Creating S3 Stage to download files
 create or replace stage s3_loading_data
     url = 's3://course-practice-kabir'
-    CREDENTIALS = (AWS_KEY_ID='AKIAXZ5NGJVDTSTB4KHA', AWS_SECRET_KEY='Hk3161HeyHo/XmvMAbgXxETWNbBsmuXfAUxu+jEc');
+    CREDENTIALS = (AWS_KEY_ID=[REDACTED], AWS_SECRET_KEY=[REDACTED]);
 
 -- Confirming that the stage is made correctly
 list @s3_loading_data;
