@@ -1,0 +1,22 @@
+-- storage integration
+CREATE OR REPLACE STORAGE INTEGRATION S3_INTEGRATION_PRACTICE
+  TYPE = EXTERNAL_STAGE
+  STORAGE_PROVIDER = 'S3'
+  STORAGE_AWS_ROLE_ARN = 'arn:aws:iam::536697261383:role/s3_my_practice'
+  ENABLED = TRUE
+  STORAGE_ALLOWED_LOCATIONS = ('s3://course-practice-kabir');
+
+DESC INTEGRATION S3_INTEGRATION_Practice;
+
+create or replace stage s3_integration_practice_Stage
+storage_integration = s3_integration_practice
+url = 's3://course-practice-kabir/sale_data.csv'
+FILE_FORMAT = csv_format;
+
+list @s3_integration_practice_Stage;
+
+
+truncate sales_Data;
+
+copy into sales_data
+from @s3_integration_practice_Stage;
