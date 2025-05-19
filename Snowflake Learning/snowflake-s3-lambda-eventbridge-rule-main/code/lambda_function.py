@@ -3,7 +3,7 @@ import json
 import boto3
 import requests
 from snowflake_provider import Provider
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 
 def connect_to_snowflake():
     '''
