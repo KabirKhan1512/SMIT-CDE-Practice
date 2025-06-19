@@ -36,7 +36,7 @@ services:
       - NIFI_CLUSTER_NODE_PROTOCOL_PORT=2084
       - NIFI_ZK_CONNECT_STRING=zookeeper:2181
       - NIFI_ELECTION_MAX_WAIT=1 min
-      - NIFI_SENSITIVE_PROPS_KEY=vvvvvvvvvvvvv
+      - NIFI_SENSITIVE_PROPS_KEY=kabirkhan1512
     volumes:
       - shared-workspace:/opt/workspace/nifi
 ...
