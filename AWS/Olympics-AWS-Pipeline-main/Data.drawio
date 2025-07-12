@@ -1,0 +1,40 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36" version="28.0.0">
+  <diagram name="Page-1" id="46yK686eRBkODE83ea6m">
+    <mxGraphModel dx="1042" dy="562" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="S_B20WZUnn-bfiFgjB_d-1" value="Athletes" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="50" y="40" width="200" height="226" as="geometry" />
+        </mxCell>
+        <mxCell id="S_B20WZUnn-bfiFgjB_d-2" value="&lt;div&gt;`name` varchar(200) ,&amp;nbsp;&lt;/div&gt;&lt;div&gt;`short_name` varchar(200) ,&amp;nbsp;&lt;/div&gt;&lt;div&gt;`gender` varchar(200) ,&amp;nbsp;&lt;/div&gt;&lt;div&gt;`birth_date` varchar(200) ,&amp;nbsp;&lt;/div&gt;&lt;div&gt;`discipline` varchar(200) ,&amp;nbsp;&lt;/div&gt;&lt;div&gt;`discipline_code` varchar(200) ,&lt;/div&gt;&lt;div&gt;`height_m/ft` varchar(200)&amp;nbsp;&lt;/div&gt;&lt;div&gt;&lt;div&gt;`birth_place` varchar(200) ,&amp;nbsp;&lt;/div&gt;&lt;div&gt;`birth_country` varchar(200) ,&amp;nbsp;&lt;/div&gt;&lt;div&gt;`country` varchar(200) ,&amp;nbsp;&lt;/div&gt;&lt;div&gt;`country_code` varchar(200) ,&amp;nbsp;&lt;/div&gt;&lt;div&gt;`residence_place` varchar(200) ,&amp;nbsp;&lt;/div&gt;&lt;div&gt;`residence_country` varchar(200)&lt;/div&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="S_B20WZUnn-bfiFgjB_d-1">
+          <mxGeometry y="26" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="S_B20WZUnn-bfiFgjB_d-3" value="Medals" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="310" y="40" width="208" height="186" as="geometry" />
+        </mxCell>
+        <mxCell id="S_B20WZUnn-bfiFgjB_d-4" value="&lt;div&gt;`medal_type` varchar(200),&amp;nbsp;&lt;/div&gt;&lt;div&gt;`medal_code` integer,&amp;nbsp;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;`athlete_short_name` varchar(200),&amp;nbsp;&lt;/div&gt;&lt;div&gt;`athlete_name` varchar(200),&amp;nbsp;&lt;/div&gt;&lt;div&gt;`athlete_sex` varchar(200),&amp;nbsp;&lt;/div&gt;&lt;div&gt;`country_code` varchar(200),&amp;nbsp;&lt;/div&gt;&lt;div&gt;`discipline_code` varchar(200),&amp;nbsp;&lt;/div&gt;&lt;div&gt;`event` varchar(200),&amp;nbsp;&lt;/div&gt;&lt;div&gt;`country` varchar(200),&amp;nbsp;&lt;/div&gt;&lt;div&gt;`discipline` varchar(200)&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="S_B20WZUnn-bfiFgjB_d-3">
+          <mxGeometry y="26" width="208" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="S_B20WZUnn-bfiFgjB_d-5" value="Coaches" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="50" y="290" width="170" height="156" as="geometry" />
+        </mxCell>
+        <mxCell id="S_B20WZUnn-bfiFgjB_d-6" value="&lt;div&gt;`name` varchar(200) ,&amp;nbsp;&lt;/div&gt;&lt;div&gt;`short_name` varchar(200) ,&amp;nbsp;&lt;/div&gt;&lt;div&gt;`gender` varchar(200) ,&amp;nbsp;&lt;/div&gt;&lt;div&gt;`birth_date` varchar(200) ,&amp;nbsp;&lt;/div&gt;&lt;div&gt;`country_code` varchar(200) ,&amp;nbsp;&lt;/div&gt;&lt;div&gt;`discipline` varchar(200) ,&amp;nbsp;&lt;/div&gt;&lt;div&gt;`function` varchar(200) ,&amp;nbsp;&lt;/div&gt;&lt;div&gt;`event` varchar(200)&amp;nbsp;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="S_B20WZUnn-bfiFgjB_d-5">
+          <mxGeometry y="26" width="170" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="S_B20WZUnn-bfiFgjB_d-7" value="Medals_Totals" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="310" y="270" width="170" height="136" as="geometry" />
+        </mxCell>
+        <mxCell id="S_B20WZUnn-bfiFgjB_d-8" value="&lt;div&gt;`rank` integer,&amp;nbsp;&lt;/div&gt;&lt;div&gt;`country code` varchar(200),&amp;nbsp;&lt;/div&gt;&lt;div&gt;`gold medal` integer,&amp;nbsp;&lt;/div&gt;&lt;div&gt;`silver medal` integer,&amp;nbsp;&lt;/div&gt;&lt;div&gt;`bronze medal` integer,&amp;nbsp;&lt;/div&gt;&lt;div&gt;`total` integer,&amp;nbsp;&lt;/div&gt;&lt;div&gt;`country` varchar(200)&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="S_B20WZUnn-bfiFgjB_d-7">
+          <mxGeometry y="26" width="170" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="S_B20WZUnn-bfiFgjB_d-9" value="Technical_Officials" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;align=center;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="560" y="266" width="170" height="136" as="geometry" />
+        </mxCell>
+        <mxCell id="S_B20WZUnn-bfiFgjB_d-10" value="&lt;div&gt;`name` varchar(200) ,&amp;nbsp;&lt;/div&gt;&lt;div&gt;`short_name` varchar(200) ,&amp;nbsp;&lt;/div&gt;&lt;div&gt;`gender` varchar(200) ,&amp;nbsp;&lt;/div&gt;&lt;div&gt;`birth_date` varchar(200) ,&amp;nbsp;&lt;/div&gt;&lt;div&gt;`country` varchar(200) ,&amp;nbsp;&lt;/div&gt;&lt;div&gt;`discipline` varchar(200) ,&amp;nbsp;&lt;/div&gt;&lt;div&gt;`function` varchar(200)&amp;nbsp;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="S_B20WZUnn-bfiFgjB_d-9">
+          <mxGeometry y="26" width="170" height="110" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
